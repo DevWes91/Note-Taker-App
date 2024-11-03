@@ -77,7 +77,7 @@ app.delete('/api/notes/:id', (req, res) => {
 
 // Wildcard route to serve index.html
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/Develop/public/index.html'));
+    res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
 app.listen(PORT, () => {
