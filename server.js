@@ -9,11 +9,11 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public'))); // Correctly pointing to the public directory
 
 // HTML Routes
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/notes.html'));
+    res.sendFile(path.join(__dirname, 'public', 'notes.html')); // Serve notes.html from the public directory
 });
 
 // API Routes
@@ -77,7 +77,7 @@ app.delete('/api/notes/:id', (req, res) => {
 
 // Wildcard route to serve index.html
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve index.html from the public directory
 });
 
 app.listen(PORT, () => {
