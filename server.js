@@ -9,16 +9,16 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // Correctly pointing to the public directory
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public directory
 
 // HTML Routes
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'notes.html')); // Serve notes.html from the public directory
+    res.sendFile(path.join(__dirname, 'public', 'notes.html')); // Serve notes.html from public directory
 });
 
 // API Routes
 app.get('/api/notes', (req, res) => {
-    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public', 'db', 'db.json'), 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Error reading notes' });
@@ -34,7 +34,7 @@ app.post('/api/notes', (req, res) => {
         text: req.body.text
     };
 
-    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public', 'db', 'db.json'), 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Error reading notes' });
@@ -43,7 +43,7 @@ app.post('/api/notes', (req, res) => {
         const notes = JSON.parse(data);
         notes.push(newNote);
 
-        fs.writeFile('./db/db.json', JSON.stringify(notes, null, 2), (err) => {
+        fs.writeFile(path.join(__dirname, 'public', 'db', 'db.json'), JSON.stringify(notes, null, 2), (err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ error: 'Error saving note' });
@@ -56,7 +56,7 @@ app.post('/api/notes', (req, res) => {
 app.delete('/api/notes/:id', (req, res) => {
     const noteId = req.params.id;
 
-    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'public', 'db', 'db.json'), 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Error reading notes' });
@@ -65,7 +65,7 @@ app.delete('/api/notes/:id', (req, res) => {
         let notes = JSON.parse(data);
         notes = notes.filter(note => note.id !== noteId);
 
-        fs.writeFile('./db/db.json', JSON.stringify(notes, null, 2), (err) => {
+        fs.writeFile(path.join(__dirname, 'public', 'db', 'db.json'), JSON.stringify(notes, null, 2), (err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ error: 'Error deleting note' });
@@ -77,7 +77,7 @@ app.delete('/api/notes/:id', (req, res) => {
 
 // Wildcard route to serve index.html
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve index.html from the public directory
+    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve index.html from public directory
 });
 
 app.listen(PORT, () => {
