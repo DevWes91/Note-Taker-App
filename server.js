@@ -11,6 +11,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public directory
 
+// Set Content Security Policy
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' data:;"); // Allow fonts from the same origin and data URIs
+    next();
+});
+
 // HTML Routes
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'notes.html')); // Serve notes.html from public directory
